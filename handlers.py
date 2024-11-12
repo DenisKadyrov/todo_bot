@@ -67,7 +67,10 @@ async def get_task_title(
         user_id=user_id, 
         title=title
     )
-    await task_crud.create(db=session, obj_in=obj_in)
+    try:
+        await task_crud.create(db=session, obj_in=obj_in)
+    except:
+        await message.answer("Are you send /start command?")
     await state.clear()
 
 
