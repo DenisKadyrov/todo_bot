@@ -30,9 +30,12 @@ async def cmd_start(
     chat_id = str(message.chat.id)
     username = message.from_user.username
     obj_in = CreateUser(id=user_id, chat_id=chat_id, username=username,)
-    await user_crud.create(db=session, obj_in=obj_in)
+    try:
+        await user_crud.create(db=session, obj_in=obj_in)
+    except:
+        await message.answer("Hello, again!")
 
-    await message.answer("Hello")
+    await message.answer("HI! Welcome! You can add task with help /add command and show all tasks with command /tsk")
 
 
 @router.message(StateFilter(None), Command("add"))
@@ -49,7 +52,7 @@ async def get_tasks(
     session: AsyncSession,
 ):
     user_id = message.from_user.id
-    await message.answer("Click for complete", reply_markup=await task_keyboard(session, user_id))
+    await message.answer("Click to task for complete", reply_markup=await task_keyboard(session, user_id))
 
 
 @router.message(TaskStates.task_title)
@@ -70,7 +73,7 @@ async def get_task_title(
 
 @router.message()
 async def another_message(message: Message):
-    await message.answer("I don't know what are you mean!")
+    await message.answer("I don't know this command. Try again!")
 
     
 @router.callback_query()
@@ -81,5 +84,5 @@ async def delete_task(
     print(callback.from_user.id)
     await task_crud.remove(db=session, id=callback.data.split('_')[1])
     await callback.message.delete() 
-    await callback.message.answer("Click for complete", reply_markup= await task_keyboard(session, callback.from_user.id))
+    await callback.message.answer("Click to task for complete", reply_markup= await task_keyboard(session, callback.from_user.id))
     await session.commit()
