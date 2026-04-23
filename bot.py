@@ -1,5 +1,6 @@
 import logging
 import asyncio
+
 from aiogram import Bot, Dispatcher
 from aiogram.utils.callback_answer import CallbackAnswerMiddleware
 
@@ -16,7 +17,7 @@ logging.basicConfig(level=logging.INFO)
 async def main():
     engine = create_async_engine(
         str(settings.SQLALCHEMY_DATABASE_URI), 
-        echo=True,
+        echo=False,
     )
 
     sessionmaker = async_sessionmaker(

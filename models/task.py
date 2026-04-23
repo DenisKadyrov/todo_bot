@@ -10,6 +10,9 @@ class Task(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     title: Mapped[str] = mapped_column(nullable=False)
-    user_id: Mapped[str] = mapped_column(BigInteger, ForeignKey("users.id"), nullable=False)
-    user: Mapped["User"] = relationship('User', back_populates='tasks')
-
+    user_id: Mapped[int] = mapped_column(
+        BigInteger,
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    user: Mapped["User"] = relationship("User", back_populates="tasks")
